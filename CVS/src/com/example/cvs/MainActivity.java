@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
 				if(msg.what==0)
 				{
 					  Intent intent = new Intent();
-					  intent.setClass(MainActivity.this, InfoCheck.class);
+					  intent.setClass(MainActivity.this, ItemSelected.class);
 					  startActivity(intent);
 				}else
 				{

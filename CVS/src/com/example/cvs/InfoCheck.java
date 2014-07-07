@@ -1,49 +1,52 @@
 package com.example.cvs;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import Utility.Packet;
 import Utility.socketClient;
-import android.R.integer;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.ContactsContract.Contacts.Data;
-import android.text.Editable;
-import android.view.KeyEvent;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
-public class InfoCheck extends Activity {
-	
-	socketClient soC;
-	List<HashMap<String, Object>> data;
-	SimpleAdapter adapter;
-	Handler DbInfoHandler;
-	int cnt=0;
-	
-	
+public class InfoCheck extends FragmentActivity {
+
+	private SlidingMenu menu;
+	private socketClient soC;
+	private List<HashMap<String, Object>> data;
+	private SimpleAdapter adapter;
+	private Handler DbInfoHandler;
+	private int cnt=0;
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		this.requestWindowFeature(Window.FEATURE_NO_TITLE); // (NEW)
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//				WindowManager.LayoutParams.FLAG_FULLSCREEN); // (NEW) 
+
+		setTitle(R.string.app_name);
+
+		// set the Above View
 		setContentView(R.layout.infocheck);
+
+		// configure the SlidingMenu
+		menu = new SlidingMenu(this);
+		menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+		menu.setShadowWidthRes(R.dimen.shadow_width);
+		menu.setShadowDrawable(R.drawable.shadow);
+		menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+		menu.setFadeDegree(0.35f);
+		menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+		menu.setMenu(R.layout.menu_frame);
+		getSupportFragmentManager()
+		.beginTransaction()
+		.replace(R.id.menu_frame, new SampleListFragment())
+		.commit();
 		
 		soC = socketClient.getInstance();
 		
@@ -90,18 +93,22 @@ public class InfoCheck extends Activity {
 		
 		soC.setDbInfoHandler(DbInfoHandler);
 	}
+
+	@Override
+	public void onBackPressed() {
+		if (menu.isMenuShowing()) {
+			menu.showContent();
+		} else {
+			super.onBackPressed();
+		}
+	}
 	
 	public void requestInfoClick(View view)
 	{
 	 
 	  Packet pkg = new Packet(7," ");
 	  soC.Send(pkg.getBuf());
-
-	  
-	  
-	  
-  
 	}
 	
-	
+
 }
