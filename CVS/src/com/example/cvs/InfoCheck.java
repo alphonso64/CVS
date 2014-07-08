@@ -6,6 +6,7 @@ import java.util.List;
 
 import Utility.Packet;
 import Utility.socketClient;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -24,6 +25,7 @@ public class InfoCheck extends FragmentActivity {
 	private SimpleAdapter adapter;
 	private Handler DbInfoHandler;
 	private int cnt=0;
+	private int cv_id;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +60,7 @@ public class InfoCheck extends FragmentActivity {
 		{
 			HashMap<String, Object> item = new HashMap<String, Object>();  
 			item.put("Attr",nameAtrr[i]);
-			item.put("value",String.valueOf(i));
+			item.put("value","NULL");
 			data.add(item); 
 			
 		}
@@ -92,6 +94,8 @@ public class InfoCheck extends FragmentActivity {
 		};
 		
 		soC.setDbInfoHandler(DbInfoHandler);
+		
+		cv_id = 0;
 	}
 
 	@Override
@@ -105,9 +109,22 @@ public class InfoCheck extends FragmentActivity {
 	
 	public void requestInfoClick(View view)
 	{
-	 
-	  Packet pkg = new Packet(7," ");
-	  soC.Send(pkg.getBuf());
+	 if(cv_id == 0)
+	 {
+			new  AlertDialog.Builder(this) .setMessage("车辆不在线" ).setPositiveButton("OK" ,  null ).show();
+			
+	 }else
+	 {
+		  Packet pkg = new Packet(7,Integer.toString(cv_id));
+		  soC.Send(pkg.getBuf()); 
+	 }
+
+	}
+
+	public void switchContent(int cv_id) {
+		this.cv_id = cv_id;
+		
+		
 	}
 	
 

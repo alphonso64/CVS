@@ -23,8 +23,9 @@ import android.widget.EditText;
 
 public class MainActivity extends Activity {
 	
-	socketClient soC;
-	Handler loginHandler;
+	private socketClient soC;
+	private Handler loginHandler;
+
 
 	@SuppressLint("NewApi")
 	@Override
